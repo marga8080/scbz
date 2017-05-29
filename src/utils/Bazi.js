@@ -92,7 +92,12 @@ export default class Bazi {
         json.rz = cD;
         json.sz = this.calcSz(cD, h);
 
-        json.str = json.nz + "、" + json.yz + "、" + json.rz + "、" + json.sz;
+        //八字
+        json.bz = json.nz + "、" + json.yz + "、" + json.rz + "、" + json.sz;
+        //五行
+        json.wx = this.calcWxFw(json.nz).wx + "、" + this.calcWxFw(json.yz).wx + "、" + this.calcWxFw(json.rz).wx + "、" + this.calcWxFw(json.sz).wx;
+        //方位
+        json.fw = this.calcWxFw(json.nz).fw + "、" + this.calcWxFw(json.yz).fw + "、" + this.calcWxFw(json.rz).fw + "、" + this.calcWxFw(json.sz).fw;
 
         return json;
     }
@@ -108,24 +113,65 @@ export default class Bazi {
      * @param m
      */
     static calcSz(rz, hour) {
-        let rg = rz.substr(0,1);
-        let sg = "";
+        let rg = rz.substr(0, 1);
+        let st = 0;
+        let x = Math.ceil(hour / 2) % 12; //计算出时辰是第几位
         if (rg === "甲" || rg === "己") {
-            sg = "甲";
+            st = 1; //"甲";
         } else if (rg === "乙" || rg === "庚") {
-            sg = "丙";
+            st = 3; //"丙";
         } else if (rg === "丙" || rg === "辛") {
-            sg = "戊";
+            st = 5;//"戊";
         } else if (rg === "丁" || rg === "壬") {
-            sg = "庚";
+            st = 7;//"庚";
         } else if (rg === "戊" || rg === "癸") {
-            sg = "壬";
+            st = 9;//"壬";
         }
-        return sg + this.cHour(hour);
+        return Gan[(x + st - 1) % 10] + Zhi[x];
     }
 
+    /**
+     * 计算时辰
+     * @param hour
+     * @returns {string}
+     */
     static cHour(hour) {
-        let x = Math.ceil(hour/2) % 12;
+        let x = Math.ceil(hour / 2) % 12;
         return Zhi[x];
     }
+
+    /**
+     * 金：天干的庚、辛 地支金：申、酉
+     * 木：天干的甲、乙 地支木：寅、卯
+     * 水：天干的壬、癸 地支水：子、亥
+     * 火：天干的丙、丁 地支火：巳、午
+     * 土：天干的戊、己 地支土：丑、辰、未、戌
+     * 计算五行方位
+     */
+    static calcWxFw(gz) {
+        let Wx = ["木", "火", "土", "金", "水"];
+        let Fw = ["东", "南", "中", "西", "北"];
+        let json = {};
+        let tg = gz.substr(0, 1);
+        let tgi = Gan.indexOf(tg);
+        json.fw = Fw[((tgi/2) | 1) % 5];
+        json.wx = Wx[((tgi/2) | 1) % 5];
+
+        let dz = gz.substr(1, 1);
+        switch (dz) {
+            case "申" :
+            case "酉" : json.wx +="金"; json.fw += "西"; break;
+            case "寅" :
+            case "卯" : json.wx +="木"; json.fw += "东"; break;
+            case "子" :
+            case "亥" : json.wx +="水"; json.fw += "北"; break;
+            case "巳" :
+            case "午" : json.wx +="火"; json.fw += "南"; break;
+            default : json.wx +="土"; json.fw += "中";
+        }
+
+        return json;
+    }
+
+
 }

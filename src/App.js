@@ -35,7 +35,11 @@ class App extends Component {
                 <br/>
                 农历：{this.state.lunar.str} {this.state.sc}时
                 <hr/>
-                八字：{this.state.scbz.str}
+                八字：{this.state.scbz.bz}
+                <br/>
+                五行：{this.state.scbz.wx}
+                <br/>
+                方位：{this.state.scbz.fw}
             </div>
         );
     }
