@@ -28,7 +28,7 @@ export default class Bazi {
      * @param m
      * @returns {*}
      */
-    solarDays(y, m) {
+    static solarDays(y, m) {
         if (m === 1) {
             return ((y % 4 === 0) && (y % 100 !== 0) || (y % 400 === 0)) ? 29 : 28;
         } else {
