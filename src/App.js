@@ -95,7 +95,7 @@ class App extends Component {
             dayList.push(i);
         }
         let hourList = [];
-        for (let i = 1; i <= 24; i++) {
+        for (let i = 0; i < 24; i++) {
             hourList.push(i);
         }
 
