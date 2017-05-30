@@ -37,12 +37,17 @@ class App extends Component {
     }
 
     _calc(date) {
-        let lunar = Lunar.calc(date);
-        //console.log(lunar);
-        this.setState({lunar: lunar});
         let solar = DateUtil.format(date, "yyyy年MM月dd日 hh时");
         //console.log(solar);
         this.setState({solar: solar});
+        //23时之后算次日
+        let h = date.getHours();
+        if (h >= 23) {
+            date.setDate(date.getDate() + 1);
+        }
+        let lunar = Lunar.calc(date);
+        //console.log(lunar);
+        this.setState({lunar: lunar});
         let sc = Bazi.cHour(date.getHours());
         this.setState({sc: sc});
         //console.log(sc)
