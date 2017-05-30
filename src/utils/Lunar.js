@@ -118,7 +118,7 @@ export default class Lunar {
             //闰月
             if (leap > 0 && i === (leap + 1) && json.isLeap === false) {
                 --i;
-                this.isLeap = true;
+                json.isLeap = true;
                 temp = this.leapDays(json.year);
             } else {
                 temp = this.monthDays(json.year, i);
