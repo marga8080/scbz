@@ -154,8 +154,8 @@ export default class Bazi {
         let json = {};
         let tg = gz.substr(0, 1);
         let tgi = Gan.indexOf(tg);
-        json.fw = Fw[((tgi/2) | 1) % 5];
-        json.wx = Wx[((tgi/2) | 1) % 5];
+        json.fw = Fw[((tgi/2) | 0) % 5];
+        json.wx = Wx[((tgi/2) | 0) % 5];
 
         let dz = gz.substr(1, 1);
         switch (dz) {
