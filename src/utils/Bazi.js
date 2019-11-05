@@ -3,11 +3,15 @@
  */
 
 
-const solarMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 const Gan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
 const Zhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+const Wx = ["木", "火", "土", "金", "水"];
+const Fw = ["东", "南", "中", "西", "北"];
+const Shishen = ["比肩", "劫财", "偏印(枭神)", "正印", "偏官(七杀)", "正官", "偏财", "正财", "食神", "伤官"];
 //const Animals = ["鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"];
 //const solarTerm = ["小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至"];
+const solarMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const sTermInfo = [0, 21208, 42467, 63836, 85337, 107014, 128867, 150921, 173149, 195551, 218072, 240693, 263343, 285989, 308563, 331033, 353350, 375494, 397447, 419210, 440795, 462224, 483532, 504758];
 
 /* eslint-disable */
@@ -98,7 +102,8 @@ export default class Bazi {
         json.wx = this.calcWxFw(json.nz).wx + "、" + this.calcWxFw(json.yz).wx + "、" + this.calcWxFw(json.rz).wx + "、" + this.calcWxFw(json.sz).wx;
         //方位
         json.fw = this.calcWxFw(json.nz).fw + "、" + this.calcWxFw(json.yz).fw + "、" + this.calcWxFw(json.rz).fw + "、" + this.calcWxFw(json.sz).fw;
-
+        //十神
+        json.shishen = this.calcShiShen(json.rz, json.nz) + "、" + this.calcShiShen(json.rz, json.yz) + "、日主、" + this.calcShiShen(json.rz, json.sz);
         return json;
     }
 
@@ -149,8 +154,6 @@ export default class Bazi {
      * 计算五行方位
      */
     static calcWxFw(gz) {
-        let Wx = ["木", "火", "土", "金", "水"];
-        let Fw = ["东", "南", "中", "西", "北"];
         let json = {};
         let tg = gz.substr(0, 1);
         let tgi = Gan.indexOf(tg);
@@ -173,5 +176,29 @@ export default class Bazi {
         return json;
     }
 
-
+    /**
+     * 计算十神
+     * 十神最简算法 神=日干-它干+1或3，+3当且仅当日干奇它干偶时，神数比肩１，劫财２，偏印３，正印４，偏官５，正官６，偏财７，正财８，食神９，伤官10．
+     * @param rz
+     * @param tz
+     */
+    static calcShiShen(rz, tz) {
+        // 日干
+        let rg = rz.substr(0, 1);
+        let rgi = Gan.indexOf(rg) + 1;
+        // 它干
+        let tg = tz.substr(0, 1);
+        let tgi = Gan.indexOf(tg) + 1;
+        let x = 1;
+        if (rgi % 2 === 1 && tgi % 2 === 0) {
+            x = 3;
+        }
+        let index = rgi - tgi + x - 1;
+        if (index < 0) {
+            index += 10;
+        } else {
+            index %= 10;
+        }
+        return Shishen[index]
+    }
 }

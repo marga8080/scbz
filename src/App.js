@@ -154,7 +154,8 @@ class App extends Component {
                 五行：{this.state.scbz.wx}
                 <br/>
                 方位：{this.state.scbz.fw}
-
+                <br/>
+                十神：{this.state.scbz.shishen}
 
             </div>
         );
